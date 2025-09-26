@@ -1,0 +1,184 @@
+{
+  "app": {
+    "title": "YT Brief · N8N"
+  },
+  "auth": {
+    "login": "Connexion",
+    "username": "Identifiant",
+    "password": "Mot de passe",
+    "loginButton": "Se connecter",
+    "logout": "Déconnexion",
+    "accessMessage": "Accédez à votre assistant de veille YouTube"
+  },
+  "nav": {
+    "title": "YT Brief",
+    "refresh": "Actualiser",
+    "settings": "Paramètres"
+  },
+  "channels": {
+    "title": "Chaînes surveillées",
+    "subtitle": "Configurez les récurrences et déclenchez vos workflows N8N",
+    "addChannel": "Ajouter une chaîne",
+    "emptyState": "Aucune chaîne configurée pour le moment.",
+    "headers": {
+      "channel": "Chaîne",
+      "youtubeId": "Identifiant YouTube",
+      "schedule": "Planification",
+      "settings": "Paramètres",
+      "lastExecution": "Dernière exécution",
+      "nextExecution": "Prochaine exécution",
+      "status": "Statut",
+      "actions": "Actions"
+    }
+  },
+  "logs": {
+    "title": "Historique des exécutions",
+    "subtitle": "Suivez les déclenchements et leur statut",
+    "clearAll": "Supprimer tout",
+    "headers": {
+      "channel": "Chaîne",
+      "status": "Statut",
+      "start": "Début",
+      "end": "Fin",
+      "retries": "Retries",
+      "message": "Message",
+      "actions": "Actions"
+    },
+    "status": {
+      "success": "Succès",
+      "error": "Erreur",
+      "pending": "En cours",
+      "started": "Démarré",
+      "running": "En cours",
+      "cancelled": "Annulé"
+    },
+    "executionsCount": "exécutions",
+    "pagination": {
+      "pageOf": "Page {{current}} sur {{total}}",
+      "previous": "Page précédente",
+      "next": "Page suivante"
+    }
+  },
+  "forms": {
+    "channelModal": {
+      "titleNew": "Nouvelle chaîne",
+      "titleEdit": "Modifier la chaîne",
+      "channelName": "Nom de la chaîne",
+      "youtubeChannelId": "Identifiant YouTube",
+      "scheduling": "Planification",
+      "frequency": "Fréquence",
+      "time": "Heure",
+      "frequencies": {
+        "choose": "Choisir une fréquence",
+        "daily": "Tous les jours",
+        "weekly": "Chaque semaine",
+        "monthly": "Chaque mois",
+        "custom": "Personnalisé"
+      },
+      "weekday": "Jour de la semaine",
+      "weekdays": {
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche"
+      },
+      "monthday": "Jour du mois",
+      "monthdayHelp": "Jour du mois (1-31)",
+      "customCron": "Expression cron personnalisée",
+      "cronFormat": "Format: minute heure jour mois jour-semaine",
+      "cronPreview": "Expression générée: {{expression}}",
+      "videoLimit": "Nombre de vidéos",
+      "videoLimitHelp": "Maximum de vidéos à récupérer",
+      "daysBack": "Jours en arrière",
+      "daysBackHelp": "Période de recherche en jours",
+      "emails": "Adresses emails destinataires",
+      "emailsHelp": "Séparez les adresses emails par des virgules. Ces adresses recevront les notifications du workflow N8N.",
+      "active": "Chaîne active",
+      "cancel": "Annuler",
+      "save": "Enregistrer"
+    },
+    "settingsModal": {
+      "title": "Paramètres",
+      "webhook": "Webhook N8N",
+      "webhookHelp": "URL du webhook N8N à déclencher lors des planifications",
+      "username": "Identifiant administrateur",
+      "password": "Nouveau mot de passe",
+      "passwordHelp": "Laisser vide pour conserver le mot de passe actuel",
+      "cancel": "Annuler",
+      "save": "Enregistrer"
+    },
+    "confirmClearLogs": {
+      "title": "Supprimer toutes les exécutions",
+      "message": "Êtes-vous sûr de vouloir supprimer toutes les exécutions ?",
+      "description": "Cette action est irréversible. Toutes les données d'historique seront définitivement perdues.",
+      "cancel": "Annuler",
+      "confirm": "Supprimer tout"
+    },
+    "confirmCancelJob": {
+      "title": "Annuler l'exécution",
+      "message": "Êtes-vous sûr de vouloir annuler cette exécution ?",
+      "description": "Le job en cours sera immédiatement interrompu et marqué comme annulé.",
+      "cancel": "Non, continuer",
+      "confirm": "Oui, annuler"
+    },
+    "confirmRemove": {
+      "title": "Supprimer la chaîne",
+      "cancel": "Annuler",
+      "confirm": "Supprimer"
+    }
+  },
+  "actions": {
+    "title": "Actions",
+    "edit": "Modifier",
+    "trigger": "Déclencher",
+    "remove": "Supprimer",
+    "cancel": "Annuler",
+    "confirmCancel": "Êtes-vous sûr de vouloir annuler cette exécution ?",
+    "close": "Fermer"
+  },
+  "messages": {
+    "dataRefreshed": "Données rafraîchies",
+    "channelCreated": "Chaîne créée",
+    "channelUpdated": "Chaîne mise à jour",
+    "settingsSaved": "Paramètres enregistrés",
+    "allLogsCleared": "Toutes les exécutions ont été supprimées",
+    "validScheduleRequired": "Veuillez configurer une planification valide",
+    "validEmailsRequired": "Au moins une adresse email est requise",
+    "invalidEmail": "L'adresse email \"{{email}}\" n'est pas valide",
+    "duplicateEmails": "Des adresses emails sont dupliquées",
+    "emailsValid": "✓ {{count}} adresse(s) email valide(s)",
+    "authenticationRequired": "Authentification requise",
+    "serverError": "Erreur serveur",
+    "loginSuccessful": "Connexion réussie",
+    "channelDeleted": "Chaîne supprimée",
+    "triggerRequested": "Déclenchement demandé pour {{channelName}}",
+    "jobCancelled": "Exécution annulée avec succès",
+    "connectionSuccessful": "Connexion réussie",
+    "confirmRemoveChannel": "Supprimer \"{{channelName}}\" ?",
+    "modifyChannel": "Modifier · {{channelName}}",
+    "newChannel": "Nouvelle chaîne",
+    "createdOn": "Créée le",
+    "videos": "vidéos",
+    "days": "jours",
+    "unknown": "Inconnu",
+    "inactive": "Inactif",
+    "active": "Actif",
+    "generatedExpression": "Expression générée: {{expression}}",
+    "defaultEmailsHelp": "Séparez les adresses emails par des virgules. Ces adresses recevront les notifications du workflow N8N.",
+    "executionsCount": "{{count}} exécutions",
+    "pageInfo": "Page {{current}} sur {{total}}"
+  },
+  "language": {
+    "label": "Langue",
+    "french": "Français",
+    "english": "English"
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif",
+    "unknown": "Inconnu"
+  }
+}

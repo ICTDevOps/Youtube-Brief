@@ -1,0 +1,176 @@
+body {
+  background-color: #f4f6fb;
+  color: #1f2937;
+}
+
+.main-container {
+  max-width: 1080px;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.card.shadow-sm {
+  border-radius: 16px;
+  border: none;
+}
+
+.table thead th {
+  color: #6b7280;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table tbody td {
+  vertical-align: middle;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+
+.status-indicator .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.badge-cron {
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 500;
+}
+
+.table-actions button {
+  margin-right: 0.4rem;
+}
+
+.table-actions .dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.table-actions .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.table-actions .dropdown-item.text-danger:hover {
+  background-color: #fdf2f2;
+  color: #dc2626 !important;
+}
+
+.table-actions .dropdown-menu {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  min-width: 140px;
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+/* Hide the default dropdown arrow since we're using a custom icon */
+.table-actions .dropdown-toggle::after {
+  display: none;
+}
+
+/* Ensure dropdowns can escape their scroll containers */
+.table-responsive {
+  overflow: visible;
+}
+
+/* Parent card should not constrain dropdown positioning */
+.card {
+  overflow: visible !important;
+}
+
+.card-body {
+  overflow: visible !important;
+}
+
+/* Table container should not clip dropdowns */
+.table-responsive {
+  overflow: visible !important;
+}
+
+/* Allow horizontal scroll but visible vertical overflow for dropdowns */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+    overflow-y: visible !important;
+  }
+}
+
+#logs-table tbody tr.error {
+  background: #fef2f2;
+}
+
+#logs-table tbody tr.success {
+  background: #ecfdf5;
+}
+
+#logs-table tbody tr.pending {
+  background: #fef3c7;
+}
+
+#logs-table tbody tr.started {
+  background: #dbeafe;
+}
+
+#logs-table tbody tr.running {
+  background: #e0f2fe;
+}
+
+#logs-table tbody tr.cancelled {
+  background: #f3f4f6;
+}
+
+/* Pagination footer styling */
+.border-top {
+  border-color: #e5e7eb !important;
+}
+
+/* Better spacing for logs table */
+#logs-table {
+  margin-bottom: 0;
+}
+
+/* Ensure proper spacing in the logs card */
+.logs-card-body {
+  min-height: 200px;
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1080;
+}
+
+.no-data {
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    margin-bottom: 1.5rem;
+  }
+}

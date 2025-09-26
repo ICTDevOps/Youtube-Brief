@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  orchestrator:
+    build: .
+    container_name: youtube-orchestrator
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT:-8080}
+    ports:
+      - "${PORT:-8080}:8080"
+    volumes:
+      - orchestrator-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  orchestrator-data:

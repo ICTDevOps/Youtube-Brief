@@ -1,0 +1,184 @@
+{
+  "app": {
+    "title": "YT Brief · N8N"
+  },
+  "auth": {
+    "login": "Login",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Sign in",
+    "logout": "Logout",
+    "accessMessage": "Access your YouTube monitoring assistant"
+  },
+  "nav": {
+    "title": "YT Brief",
+    "refresh": "Refresh",
+    "settings": "Settings"
+  },
+  "channels": {
+    "title": "Monitored channels",
+    "subtitle": "Configure recurrences and trigger your N8N workflows",
+    "addChannel": "Add channel",
+    "emptyState": "No channels configured yet.",
+    "headers": {
+      "channel": "Channel",
+      "youtubeId": "YouTube ID",
+      "schedule": "Schedule",
+      "settings": "Settings",
+      "lastExecution": "Last execution",
+      "nextExecution": "Next execution",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+  "logs": {
+    "title": "Execution history",
+    "subtitle": "Track triggers and their status",
+    "clearAll": "Clear all",
+    "headers": {
+      "channel": "Channel",
+      "status": "Status",
+      "start": "Start",
+      "end": "End",
+      "retries": "Retries",
+      "message": "Message",
+      "actions": "Actions"
+    },
+    "status": {
+      "success": "Success",
+      "error": "Error",
+      "pending": "Pending",
+      "started": "Started",
+      "running": "Running",
+      "cancelled": "Cancelled"
+    },
+    "executionsCount": "executions",
+    "pagination": {
+      "pageOf": "Page {{current}} of {{total}}",
+      "previous": "Previous page",
+      "next": "Next page"
+    }
+  },
+  "forms": {
+    "channelModal": {
+      "titleNew": "New channel",
+      "titleEdit": "Edit channel",
+      "channelName": "Channel name",
+      "youtubeChannelId": "YouTube channel ID",
+      "scheduling": "Scheduling",
+      "frequency": "Frequency",
+      "time": "Time",
+      "frequencies": {
+        "choose": "Choose a frequency",
+        "daily": "Every day",
+        "weekly": "Every week",
+        "monthly": "Every month",
+        "custom": "Custom"
+      },
+      "weekday": "Day of the week",
+      "weekdays": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "monthday": "Day of the month",
+      "monthdayHelp": "Day of the month (1-31)",
+      "customCron": "Custom cron expression",
+      "cronFormat": "Format: minute hour day month weekday",
+      "cronPreview": "Generated expression: {{expression}}",
+      "videoLimit": "Number of videos",
+      "videoLimitHelp": "Maximum videos to retrieve",
+      "daysBack": "Days back",
+      "daysBackHelp": "Search period in days",
+      "emails": "Recipient email addresses",
+      "emailsHelp": "Separate email addresses with commas. These addresses will receive notifications from the N8N workflow.",
+      "active": "Active channel",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "settingsModal": {
+      "title": "Settings",
+      "webhook": "N8N Webhook",
+      "webhookHelp": "N8N webhook URL to trigger during schedules",
+      "username": "Administrator username",
+      "password": "New password",
+      "passwordHelp": "Leave blank to keep current password",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "confirmClearLogs": {
+      "title": "Clear all executions",
+      "message": "Are you sure you want to delete all executions?",
+      "description": "This action is irreversible. All history data will be permanently lost.",
+      "cancel": "Cancel",
+      "confirm": "Clear all"
+    },
+    "confirmCancelJob": {
+      "title": "Cancel execution",
+      "message": "Are you sure you want to cancel this execution?",
+      "description": "The running job will be immediately stopped and marked as cancelled.",
+      "cancel": "No, continue",
+      "confirm": "Yes, cancel"
+    },
+    "confirmRemove": {
+      "title": "Remove channel",
+      "cancel": "Cancel",
+      "confirm": "Remove"
+    }
+  },
+  "actions": {
+    "title": "Actions",
+    "edit": "Edit",
+    "trigger": "Trigger",
+    "remove": "Remove",
+    "cancel": "Cancel",
+    "confirmCancel": "Are you sure you want to cancel this execution?",
+    "close": "Close"
+  },
+  "messages": {
+    "dataRefreshed": "Data refreshed",
+    "channelCreated": "Channel created",
+    "channelUpdated": "Channel updated",
+    "settingsSaved": "Settings saved",
+    "allLogsCleared": "All executions have been cleared",
+    "validScheduleRequired": "Please configure a valid schedule",
+    "validEmailsRequired": "At least one email address is required",
+    "invalidEmail": "The email address \"{{email}}\" is not valid",
+    "duplicateEmails": "Email addresses are duplicated",
+    "emailsValid": "✓ {{count}} valid email address(es)",
+    "authenticationRequired": "Authentication required",
+    "serverError": "Server error",
+    "loginSuccessful": "Login successful",
+    "channelDeleted": "Channel deleted",
+    "triggerRequested": "Trigger requested for {{channelName}}",
+    "jobCancelled": "Execution cancelled successfully",
+    "connectionSuccessful": "Connection successful",
+    "confirmRemoveChannel": "Remove \"{{channelName}}\"?",
+    "modifyChannel": "Edit · {{channelName}}",
+    "newChannel": "New channel",
+    "createdOn": "Created on",
+    "videos": "videos",
+    "days": "days",
+    "unknown": "Unknown",
+    "inactive": "Inactive",
+    "active": "Active",
+    "generatedExpression": "Generated expression: {{expression}}",
+    "defaultEmailsHelp": "Separate email addresses with commas. These addresses will receive notifications from the N8N workflow.",
+    "executionsCount": "{{count}} executions",
+    "pageInfo": "Page {{current}} of {{total}}"
+  },
+  "language": {
+    "label": "Language",
+    "french": "Français",
+    "english": "English"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "unknown": "Unknown"
+  }
+}
