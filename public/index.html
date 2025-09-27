@@ -17,79 +17,109 @@
     />
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/material-theme.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="toast-container" id="toast-container"></div>
 
     <section id="login-view" class="min-vh-100 d-flex align-items-center justify-content-center">
-      <div class="card shadow-sm p-4" style="max-width: 420px; width: 100%;">
-        <div class="d-flex justify-content-end mb-3">
-          <select class="form-select form-select-sm" id="login-language-selector" style="width: auto;">
-            <option value="fr" data-i18n="language.french">Français</option>
-            <option value="en" data-i18n="language.english">English</option>
-          </select>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-5 col-lg-4">
+            <div class="md-card animate-fade-in" style="padding-top: 2rem;">
+              <div class="md-card-header gradient-info text-center">
+                <div class="d-flex justify-content-end mb-2" style="position: absolute; top: 1rem; right: 1rem;">
+                  <select class="form-select form-select-sm text-white" id="login-language-selector" style="width: auto; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                    <option value="fr" data-i18n="language.french" style="color: #333; background: white;">Français</option>
+                    <option value="en" data-i18n="language.english" style="color: #333; background: white;">English</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <div class="d-inline-flex align-items-center justify-content-center bg-white bg-opacity-20 rounded-circle" style="width: 60px; height: 60px;">
+                    <i data-feather="youtube" style="width: 30px; height: 30px; color: white;"></i>
+                  </div>
+                </div>
+                <h4 class="mb-1 font-weight-bold" data-i18n="auth.login">Connexion</h4>
+                <p class="mb-0 opacity-8" data-i18n="auth.accessMessage">Accédez à la console d'orchestration YouTube</p>
+              </div>
+              <div class="card-body px-4 py-4">
+                <form id="login-form">
+                  <div class="mb-3">
+                    <label class="form-label-material" for="login-username" data-i18n="auth.username">Identifiant</label>
+                    <input class="form-control form-control-material" id="login-username" name="username" type="text" required />
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label-material" for="login-password" data-i18n="auth.password">Mot de passe</label>
+                    <input class="form-control form-control-material" id="login-password" name="password" type="password" required />
+                  </div>
+                  <button class="btn btn-material btn-gradient-info w-100 mb-3" type="submit" data-i18n="auth.loginButton">Se connecter</button>
+                </form>
+                <div class="text-center">
+                  <p class="text-muted small mb-0">
+                    <span class="badge badge-material badge-info">YT Brief</span>
+                    <span class="ms-2">v1.0.0</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="text-center mb-4">
-          <div class="mb-3">
-            <span class="badge rounded-pill text-bg-primary">YT Brief</span>
+
+        <!-- Footer -->
+        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
+          <div class="text-white-50 small text-center">
+            VNETConsult - 2025
           </div>
-          <h1 class="h4" data-i18n="auth.login">Connexion</h1>
-          <p class="text-muted mb-0" data-i18n="auth.accessMessage">Accédez à la console d'orchestration YouTube</p>
         </div>
-        <form id="login-form" class="d-grid gap-3">
-          <div>
-            <label class="form-label" for="login-username" data-i18n="auth.username">Identifiant</label>
-            <input class="form-control" id="login-username" name="username" type="text" required />
-          </div>
-          <div>
-            <label class="form-label" for="login-password" data-i18n="auth.password">Mot de passe</label>
-            <input class="form-control" id="login-password" name="password" type="password" required />
-          </div>
-          <button class="btn btn-primary" type="submit" data-i18n="auth.loginButton">Se connecter</button>
-        </form>
       </div>
     </section>
 
     <section id="dashboard-view" class="d-none">
-      <nav class="navbar navbar-expand-lg bg-white border-bottom">
+      <nav class="navbar navbar-expand-lg navbar-material">
         <div class="container-fluid main-container">
-          <span class="navbar-brand" data-i18n="nav.title">Orchestrateur YouTube</span>
+          <div class="d-flex align-items-center">
+            <div class="bg-material-gradient-info rounded-circle p-2 me-3">
+              <i data-feather="youtube" style="width: 20px; height: 20px; color: white;"></i>
+            </div>
+            <span class="navbar-brand mb-0" data-i18n="nav.title">YouTube Brief</span>
+          </div>
           <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-secondary btn-sm" id="refresh-button" data-i18n="nav.refresh">
-              <i data-feather="refresh-cw" class="me-1"></i>Actualiser
+            <button class="btn btn-material btn-gradient-info btn-sm" id="refresh-button" data-i18n="nav.refresh">
+              <i data-feather="refresh-cw" class="me-1" style="width: 16px; height: 16px;"></i>Actualiser
             </button>
-            <button class="btn btn-outline-primary btn-sm" id="settings-button" data-i18n="nav.settings">
-              <i data-feather="settings" class="me-1"></i>Paramètres
+            <button class="btn btn-outline-secondary btn-sm" id="settings-button" data-i18n="nav.settings">
+              <i data-feather="settings" class="me-1" style="width: 16px; height: 16px;"></i>Paramètres
             </button>
             <select class="form-select form-select-sm" id="language-selector" style="width: auto;">
               <option value="fr" data-i18n="language.french">Français</option>
               <option value="en" data-i18n="language.english">English</option>
             </select>
-            <button class="btn btn-link text-danger" id="logout-button" data-i18n="auth.logout">
-              <i data-feather="log-out" class="me-1"></i>Déconnexion
+            <button class="btn btn-outline-danger btn-sm" id="logout-button" data-i18n="auth.logout">
+              <i data-feather="log-out" class="me-1" style="width: 16px; height: 16px;"></i>Déconnexion
             </button>
           </div>
         </div>
       </nav>
 
-      <main class="container my-4 main-container">
+      <main class="container my-4 main-container" style="position: relative; z-index: 1;">
         <div class="row g-4">
           <div class="col-12">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+            <div class="md-card" style="padding-top: 2rem;">
+              <div class="md-card-header gradient-info">
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <h2 class="h5 mb-1" data-i18n="channels.title">Chaînes surveillées</h2>
-                    <p class="text-muted mb-0" data-i18n="channels.subtitle">Configurez les récurrences et déclenchez vos workflows N8N</p>
+                    <h5 class="mb-1" data-i18n="channels.title">Chaînes surveillées</h5>
+                    <p class="mb-0 opacity-8" data-i18n="channels.subtitle">Configurez les récurrences et déclenchez vos workflows N8N</p>
                   </div>
-                  <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary" id="add-channel-button" data-i18n="channels.addChannel">
-                      <i data-feather="plus" class="me-1"></i>Ajouter une chaîne
-                    </button>
-                  </div>
+                  <button class="btn btn-outline-light btn-sm" id="add-channel-button" data-i18n="channels.addChannel">
+                    <i data-feather="plus" class="me-1" style="width: 16px; height: 16px;"></i>Ajouter une chaîne
+                  </button>
                 </div>
+              </div>
+              <div class="card-body p-0">
                 <div class="table-responsive">
-                  <table class="table align-middle" id="channels-table">
+                  <table class="table table-material align-middle" id="channels-table">
                     <thead>
                       <tr>
                         <th data-i18n="channels.headers.channel">Chaîne</th>
@@ -113,22 +143,24 @@
           </div>
 
           <div class="col-12">
-            <div class="card shadow-sm h-100">
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="md-card h-100" style="padding-top: 1.5rem;">
+              <div class="md-card-header gradient-success">
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <h2 class="h5 mb-1" data-i18n="logs.title">Historique des exécutions</h2>
-                    <p class="text-muted mb-0" data-i18n="logs.subtitle">Suivez les déclenchements et leur statut</p>
+                    <h5 class="mb-1" data-i18n="logs.title">Historique des exécutions</h5>
+                    <p class="mb-0 opacity-8" data-i18n="logs.subtitle">Suivez les déclenchements et leur statut</p>
                   </div>
                   <div class="d-flex align-items-center gap-2">
-                    <span class="badge text-bg-light" id="logs-count-badge">0 <span data-i18n="logs.executionsCount">exécutions</span></span>
-                    <button class="btn btn-outline-danger btn-sm" id="clear-logs-button" data-i18n="logs.clearAll">
-                      <i data-feather="trash-2" class="me-1"></i>Supprimer tout
+                    <span class="badge bg-white bg-opacity-20 text-white" id="logs-count-badge">0 <span data-i18n="logs.executionsCount">exécutions</span></span>
+                    <button class="btn btn-outline-light btn-sm" id="clear-logs-button" data-i18n="logs.clearAll">
+                      <i data-feather="trash-2" class="me-1" style="width: 16px; height: 16px;"></i>Supprimer tout
                     </button>
                   </div>
                 </div>
+              </div>
+              <div class="card-body d-flex flex-column p-0">
                 <div class="table-responsive">
-                  <table class="table" id="logs-table">
+                  <table class="table table-material" id="logs-table">
                     <thead>
                       <tr>
                         <th data-i18n="logs.headers.channel">Chaîne</th>
@@ -172,6 +204,15 @@
           </div>
         </div>
       </main>
+
+      <!-- Footer -->
+      <footer class="mt-5 py-3 text-center">
+        <div class="container">
+          <div class="text-muted small">
+            VNETConsult - 2025
+          </div>
+        </div>
+      </footer>
     </section>
 
     <div class="modal fade" id="channel-modal" tabindex="-1" aria-hidden="true">
