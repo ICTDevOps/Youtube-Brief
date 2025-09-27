@@ -1,73 +1,73 @@
-# Orchestrateur YouTube pour N8N
+# YouTube Orchestrator for N8N
 
-Application légère pour planifier et déclencher des workflows N8N à partir de plusieurs chaînes YouTube, avec interface web et stockage JSON persistant.
+Lightweight application to schedule and trigger N8N workflows from multiple YouTube channels, with web interface and persistent JSON storage.
 
-## Fonctionnalités principales
+## Key Features
 
-- Tableau de bord web responsive (Bootstrap) avec authentification par session.
-- Gestion multi-chaînes : ajout, édition, activation/désactivation, suppression, déclenchement manuel.
-- Planification individuelle par expression cron (5 ou 6 champs) et calcul automatique de la prochaine exécution.
-- Historique détaillé des exécutions (succès/erreur, horodatages, retries) avec pagination.
-- Intégration HTTP avec un webhook N8N configurable, retries automatiques et timeout paramétrable.
-- Stockage JSON sur disque (volume Docker) et logs conservés (limite 500 entrées).
-- Scripts de démarrage/arrêt via Docker Compose.
+- Responsive web dashboard (Bootstrap) with session-based authentication
+- Multi-channel management: add, edit, enable/disable, delete, manual trigger
+- Individual scheduling via cron expressions (5 or 6 fields) with automatic next execution calculation
+- Detailed execution history (success/error, timestamps, retries) with pagination
+- HTTP integration with configurable N8N webhook, automatic retries and configurable timeout
+- JSON storage on disk (Docker volume) with preserved logs (500 entries limit)
+- Docker Compose startup/shutdown scripts
 
-## Prérequis
+## Prerequisites
 
-- Node.js 18+ (pour un lancement local hors Docker)
-- Docker / Docker Compose (pour un déploiement conteneurisé)
+- Node.js 18+ (for local deployment outside Docker)
+- Docker / Docker Compose (for containerized deployment)
 
-## Configuration des variables d'environnement
+## Environment Variables Configuration
 
-Copiez le fichier `.env.example` vers `.env` et adaptez les valeurs :
+Copy `.env.example` to `.env` and adapt the values:
 
 ```env
 PORT=8080
 N8N_WEBHOOK_URL=https://n8n.example.com/webhook/youtube
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=change-me
-SESSION_SECRET=remplacez-ceci
+SESSION_SECRET=replace-this
 N8N_RETRY_ATTEMPTS=3
 N8N_RETRY_DELAY_MS=5000
 N8N_TIMEOUT_MS=60000
 CRON_TIMEZONE=Europe/Paris
 ```
 
-> ⚠️ Le couple `ADMIN_USERNAME` / `ADMIN_PASSWORD` doit obligatoirement être fourni au premier démarrage afin de générer le hash stocké dans `data/data.json`.
+> ⚠️ The `ADMIN_USERNAME` / `ADMIN_PASSWORD` pair must be provided on first startup to generate the hash stored in `data/data.json`.
 
-### Signification des variables
+### Variable Descriptions
 
 | Variable | Description |
 | --- | --- |
-| `PORT` | Port HTTP exposé par le serveur (par défaut 8080). |
-| `N8N_WEBHOOK_URL` | URL du webhook N8N à déclencher lors des planifications. |
-| `ADMIN_USERNAME` | Identifiant administrateur pour la connexion à l'UI. |
-| `ADMIN_PASSWORD` | Mot de passe administrateur (haché et stocké au démarrage). |
-| `SESSION_SECRET` | Secret utilisé pour signer les sessions Express. |
-| `N8N_RETRY_ATTEMPTS` | Nombre de tentatives sur le webhook (1 = aucune relance). |
-| `N8N_RETRY_DELAY_MS` | Délai (ms) entre deux tentatives en cas d'échec. |
-| `N8N_TIMEOUT_MS` | Timeout (ms) appliqué à l'appel du webhook. |
-| `CRON_TIMEZONE` | Fuseau horaire appliqué aux expressions cron (ex: `Europe/Paris`). |
+| `PORT` | HTTP port exposed by the server (default 8080). |
+| `N8N_WEBHOOK_URL` | N8N webhook URL to trigger during scheduling. |
+| `ADMIN_USERNAME` | Administrator username for UI login. |
+| `ADMIN_PASSWORD` | Administrator password (hashed and stored at startup). |
+| `SESSION_SECRET` | Secret used to sign Express sessions. |
+| `N8N_RETRY_ATTEMPTS` | Number of webhook attempts (1 = no retry). |
+| `N8N_RETRY_DELAY_MS` | Delay (ms) between attempts on failure. |
+| `N8N_TIMEOUT_MS` | Timeout (ms) applied to webhook calls. |
+| `CRON_TIMEZONE` | Timezone applied to cron expressions (ex: `Europe/Paris`). |
 
-## Démarrage avec Docker
+## Docker Deployment
 
 ```bash
-# Construire et démarrer en arrière-plan
+# Build and start in background
 ./scripts/start.sh
 
-# Arrêter et supprimer les conteneurs
+# Stop and remove containers
 ./scripts/stop.sh
 ```
 
-Le volume Docker `orchestrator-data` contient `data/data.json` (channels, paramètres, logs). Pour un premier démarrage sans scripts shell :
+The Docker volume `orchestrator-data` contains `data/data.json` (channels, settings, logs). For first startup without shell scripts:
 
 ```bash
 docker compose up -d --build
 ```
 
-L'application est accessible sur `http://localhost:8080` (adapter selon `PORT`).
+The application is accessible at `http://localhost:8080` (adjust according to `PORT`).
 
-## Lancement local (hors Docker)
+## Local Deployment (outside Docker)
 
 ```bash
 npm install
@@ -75,68 +75,68 @@ npm run build
 npm start
 ```
 
-Pour le développement avec rechargement TypeScript :
+For development with TypeScript hot reload:
 
 ```bash
 npm run dev
 ```
 
-La donnée persiste dans `data/data.json`. Pensez à versionner seulement un fichier d'exemple si besoin (`.env.example`).
+Data persists in `data/data.json`. Consider versioning only an example file if needed (`.env.example`).
 
-## API HTTP
+## HTTP API
 
-Toutes les routes `/api/*` nécessitent une session authentifiée (sauf `/api/login`, `/api/session`, `/api/health`). Les réponses sont en JSON.
+All `/api/*` routes require an authenticated session (except `/api/login`, `/api/session`, `/api/health`). Responses are in JSON format.
 
-| Méthode | Route | Description |
+| Method | Route | Description |
 | --- | --- | --- |
-| `GET` | `/api/health` | Vérifie l'état du service (retour `{status: "ok"}`). |
-| `POST` | `/api/login` | Authentification `{username, password}`. |
-| `POST` | `/api/logout` | Déconnexion de la session actuelle. |
-| `GET` | `/api/session` | Retourne `{authenticated, username}`. |
-| `GET` | `/api/channels` | Liste des chaînes configurées. |
-| `POST` | `/api/channels` | Ajoute une chaîne `{youtubeChannelId, channelName, cronExpression, isActive?}`. |
-| `PUT` | `/api/channels/:id` | Met à jour une chaîne. |
-| `DELETE` | `/api/channels/:id` | Supprime une chaîne. |
-| `POST` | `/api/channels/:id/trigger` | Déclenche manuellement le webhook pour la chaîne. |
-| `GET` | `/api/logs?offset&limit` | Historique des exécutions (pagination). |
-| `GET` | `/api/settings` | Paramètres courants (webhook + identifiant admin). |
-| `PUT` | `/api/settings` | Met à jour le webhook et/ou les identifiants admin. |
+| `GET` | `/api/health` | Check service status (returns `{status: "ok"}`). |
+| `POST` | `/api/login` | Authentication `{username, password}`. |
+| `POST` | `/api/logout` | Logout current session. |
+| `GET` | `/api/session` | Returns `{authenticated, username}`. |
+| `GET` | `/api/channels` | List configured channels. |
+| `POST` | `/api/channels` | Add channel `{youtubeChannelId, channelName, cronExpression, isActive?}`. |
+| `PUT` | `/api/channels/:id` | Update channel. |
+| `DELETE` | `/api/channels/:id` | Delete channel. |
+| `POST` | `/api/channels/:id/trigger` | Manually trigger webhook for channel. |
+| `GET` | `/api/logs?offset&limit` | Execution history (pagination). |
+| `GET` | `/api/settings` | Current settings (webhook + admin credentials). |
+| `PUT` | `/api/settings` | Update webhook and/or admin credentials. |
 
-Les réponses d'erreur contiennent `{ error: string }` et éventuelle `stack` en mode développement.
+Error responses contain `{ error: string }` and optional `stack` in development mode.
 
-## Structure du projet
+## Project Structure
 
 ```
 .
-├─ src/                 # Backend TypeScript (Express, scheduling, storage)
-├─ public/              # UI statique (Bootstrap)
-├─ data/data.json       # Stockage JSON (persistant via volume)
-├─ scripts/             # Scripts Docker Compose start/stop
+├─ src/                 # TypeScript backend (Express, scheduling, storage)
+├─ public/              # Static UI (Bootstrap)
+├─ data/data.json       # JSON storage (persistent via volume)
+├─ scripts/             # Docker Compose start/stop scripts
 ├─ Dockerfile
 ├─ docker-compose.yml
 ├─ README.md
 └─ .env.example
 ```
 
-## Notes de sécurité
+## Security Notes
 
-- Mots de passe stockés hachés avec `bcrypt` (coût 12).
-- Sessions signées, cookies `httpOnly` et `sameSite=lax`. Activer HTTPS via reverse proxy en production.
-- Validation simple côté serveur sur les champs requis et expressions cron (via `node-cron`).
-- Le fichier `data/data.json` doit être protégé (contient hash admin et historiques).
+- Passwords stored hashed with `bcrypt` (cost factor 12)
+- Signed sessions, `httpOnly` and `sameSite=lax` cookies. Enable HTTPS via reverse proxy in production
+- Simple server-side validation on required fields and cron expressions (via `node-cron`)
+- The `data/data.json` file must be protected (contains admin hash and history)
 
-## Tests rapides
+## Quick Tests
 
 ```bash
-# Vérifier la compilation TypeScript
+# Check TypeScript compilation
 npm run build
 
-# Lancer en développement
+# Run in development
 npm run dev
 ```
 
-Pour vérifier la planification, vous pouvez définir une expression cron courte (`*/1 * * * *`) et observer les logs dans l'UI et `data/data.json`.
+To verify scheduling, you can set a short cron expression (`*/1 * * * *`) and observe logs in the UI and `data/data.json`.
 
-## Licence
+## License
 
 MIT
