@@ -67,7 +67,7 @@ export class OrchestratorService {
   }
 
   async cancelJob(jobId: string): Promise<boolean> {
-    return this.jobStatusService.cancelJob(jobId);
+    return await this.jobStatusService.cancelJob(jobId);
   }
 
   async getSettingsSummary(): Promise<{

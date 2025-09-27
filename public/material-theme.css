@@ -1,0 +1,416 @@
+/**
+ * Material Design Theme for YouTube Brief
+ * Inspired by Material Dashboard React by Creative Tim
+ * Adapted for Bootstrap + Vanilla JS implementation
+ */
+
+/* ===== COLOR PALETTE ===== */
+:root {
+  /* Material Colors */
+  --md-primary: #e91e63;
+  --md-primary-focus: #d81b60;
+  --md-secondary: #7b809a;
+  --md-secondary-focus: #8f93a9;
+  --md-info: #1A73E8;
+  --md-info-focus: #1662C4;
+  --md-success: #4CAF50;
+  --md-success-focus: #43A047;
+  --md-warning: #fb8c00;
+  --md-warning-focus: #fc9d26;
+  --md-error: #F44335;
+  --md-error-focus: #f65f53;
+  --md-dark: #344767;
+  --md-dark-focus: #2c3c58;
+
+  /* Background & Text */
+  --md-background: #f0f2f5;
+  --md-white: #ffffff;
+  --md-text-main: #7b809a;
+  --md-text-dark: #344767;
+
+  /* Gradients */
+  --md-gradient-primary: linear-gradient(195deg, #EC407A, #D81B60);
+  --md-gradient-info: linear-gradient(195deg, #49a3f1, #1A73E8);
+  --md-gradient-success: linear-gradient(195deg, #66BB6A, #43A047);
+  --md-gradient-warning: linear-gradient(195deg, #FFA726, #FB8C00);
+  --md-gradient-error: linear-gradient(195deg, #EF5350, #E53935);
+  --md-gradient-dark: linear-gradient(195deg, #42424a, #191919);
+
+  /* Shadows */
+  --md-shadow-xs: 0 2px 9px -5px rgba(0, 0, 0, 0.15);
+  --md-shadow-sm: 0 5px 20px -6px rgba(0, 0, 0, 0.15);
+  --md-shadow-md: 0 8px 26px -4px rgba(0, 0, 0, 0.15);
+  --md-shadow-lg: 0 20px 27px 0px rgba(0, 0, 0, 0.05);
+
+  /* Colored Shadows */
+  --md-shadow-primary: 0 8px 26px -4px rgba(233, 30, 99, 0.15);
+  --md-shadow-info: 0 8px 26px -4px rgba(26, 115, 232, 0.15);
+  --md-shadow-success: 0 8px 26px -4px rgba(76, 175, 80, 0.15);
+  --md-shadow-warning: 0 8px 26px -4px rgba(251, 140, 0, 0.15);
+  --md-shadow-error: 0 8px 26px -4px rgba(244, 67, 53, 0.15);
+  --md-shadow-dark: 0 8px 26px -4px rgba(52, 71, 103, 0.15);
+
+  /* Border Radius */
+  --md-radius-sm: 0.375rem;
+  --md-radius-md: 0.5rem;
+  --md-radius-lg: 0.75rem;
+  --md-radius-xl: 1rem;
+}
+
+/* ===== GLOBAL STYLES ===== */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--md-text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===== MATERIAL CARDS ===== */
+.md-card {
+  background: var(--md-white);
+  border-radius: var(--md-radius-xl);
+  box-shadow: var(--md-shadow-xs);
+  border: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.md-card:hover {
+  box-shadow: var(--md-shadow-md);
+  transform: translateY(-2px);
+}
+
+.md-card-header {
+  position: relative;
+  margin: -2rem 1.5rem 0;
+  padding: 2rem 1.5rem 1.5rem;
+  border-radius: var(--md-radius-xl);
+  color: white;
+  margin-bottom: 1rem;
+  z-index: 2;
+}
+
+.md-card-header.gradient-primary {
+  background: var(--md-gradient-primary);
+  box-shadow: var(--md-shadow-primary);
+}
+
+.md-card-header.gradient-info {
+  background: var(--md-gradient-info);
+  box-shadow: var(--md-shadow-info);
+}
+
+.md-card-header.gradient-success {
+  background: var(--md-gradient-success);
+  box-shadow: var(--md-shadow-success);
+}
+
+.md-card-header.gradient-warning {
+  background: var(--md-gradient-warning);
+  box-shadow: var(--md-shadow-warning);
+}
+
+.md-card-header.gradient-error {
+  background: var(--md-gradient-error);
+  box-shadow: var(--md-shadow-error);
+}
+
+.md-card-header.gradient-dark {
+  background: var(--md-gradient-dark);
+  box-shadow: var(--md-shadow-dark);
+}
+
+.md-card-header h1,
+.md-card-header h2,
+.md-card-header h3,
+.md-card-header h4,
+.md-card-header h5,
+.md-card-header h6 {
+  color: white;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ===== MATERIAL BUTTONS ===== */
+.btn-material {
+  border-radius: var(--md-radius-md);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02857em;
+  padding: 0.625rem 1.5rem;
+  border: none;
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-material:hover {
+  transform: translateY(-1px);
+}
+
+.btn-material.btn-gradient-primary {
+  background: var(--md-gradient-primary);
+  color: white;
+  box-shadow: var(--md-shadow-primary);
+}
+
+.btn-material.btn-gradient-info {
+  background: var(--md-gradient-info);
+  color: white;
+  box-shadow: var(--md-shadow-info);
+}
+
+.btn-material.btn-gradient-success {
+  background: var(--md-gradient-success);
+  color: white;
+  box-shadow: var(--md-shadow-success);
+}
+
+.btn-material.btn-gradient-warning {
+  background: var(--md-gradient-warning);
+  color: white;
+  box-shadow: var(--md-shadow-warning);
+}
+
+.btn-material.btn-gradient-error {
+  background: var(--md-gradient-error);
+  color: white;
+  box-shadow: var(--md-shadow-error);
+}
+
+.btn-material.btn-gradient-dark {
+  background: var(--md-gradient-dark);
+  color: white;
+  box-shadow: var(--md-shadow-dark);
+}
+
+/* ===== MATERIAL FORMS ===== */
+.form-control-material {
+  border: 1px solid #d2d6da;
+  border-radius: var(--md-radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+  background-color: white;
+}
+
+.form-control-material:focus {
+  border-color: var(--md-info);
+  box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+  outline: none;
+}
+
+.form-label-material {
+  color: var(--md-text-dark);
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== MATERIAL BADGES ===== */
+.badge-material {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--md-radius-sm);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02857em;
+}
+
+.badge-material.badge-success {
+  background-color: #bce2be;
+  color: #339537;
+}
+
+.badge-material.badge-error {
+  background-color: #fcd3d0;
+  color: #f61200;
+}
+
+.badge-material.badge-warning {
+  background-color: #ffd59f;
+  color: #c87000;
+}
+
+.badge-material.badge-info {
+  background-color: #aecef7;
+  color: #095bc6;
+}
+
+.badge-material.badge-primary {
+  background-color: #f8b3ca;
+  color: #cc084b;
+}
+
+.badge-material.badge-secondary {
+  background-color: #d7d9e1;
+  color: #6c757d;
+}
+
+/* ===== MATERIAL TABLES ===== */
+.table-material {
+  background: white;
+  border-radius: var(--md-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--md-shadow-xs);
+}
+
+.table-material thead th {
+  background-color: #f8f9fa;
+  border: none;
+  color: var(--md-text-dark);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 1rem;
+}
+
+.table-material tbody td {
+  border: none;
+  border-top: 1px solid #f0f2f5;
+  padding: 1rem;
+  vertical-align: middle;
+  color: var(--md-text-main);
+  font-size: 0.875rem;
+}
+
+.table-material tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* ===== NAVIGATION STYLES ===== */
+.navbar-material {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--md-shadow-sm);
+  border: none;
+}
+
+.navbar-material .navbar-brand {
+  color: var(--md-text-dark);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* ===== SIDEBAR STYLES ===== */
+.sidebar-material {
+  background: var(--md-white);
+  box-shadow: var(--md-shadow-lg);
+  border-radius: var(--md-radius-xl);
+  margin: 1rem;
+  height: calc(100vh - 2rem);
+}
+
+/* ===== DROPDOWN STYLES ===== */
+.dropdown-menu-material {
+  border: none;
+  border-radius: var(--md-radius-lg);
+  box-shadow: var(--md-shadow-lg);
+  padding: 0.5rem 0;
+}
+
+.dropdown-item-material {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--md-text-main);
+  transition: all 0.15s ease;
+}
+
+.dropdown-item-material:hover {
+  background-color: #f8f9fa;
+  color: var(--md-text-dark);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-material-primary { color: var(--md-primary) !important; }
+.text-material-info { color: var(--md-info) !important; }
+.text-material-success { color: var(--md-success) !important; }
+.text-material-warning { color: var(--md-warning) !important; }
+.text-material-error { color: var(--md-error) !important; }
+.text-material-dark { color: var(--md-dark) !important; }
+
+.bg-material-gradient-primary { background: var(--md-gradient-primary) !important; }
+.bg-material-gradient-info { background: var(--md-gradient-info) !important; }
+.bg-material-gradient-success { background: var(--md-gradient-success) !important; }
+.bg-material-gradient-warning { background: var(--md-gradient-warning) !important; }
+.bg-material-gradient-error { background: var(--md-gradient-error) !important; }
+.bg-material-gradient-dark { background: var(--md-gradient-dark) !important; }
+
+.shadow-material { box-shadow: var(--md-shadow-md) !important; }
+.shadow-material-sm { box-shadow: var(--md-shadow-sm) !important; }
+.shadow-material-lg { box-shadow: var(--md-shadow-lg) !important; }
+
+.rounded-material { border-radius: var(--md-radius-xl) !important; }
+.rounded-material-lg { border-radius: var(--md-radius-lg) !important; }
+.rounded-material-md { border-radius: var(--md-radius-md) !important; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes materialFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: materialFadeIn 0.3s ease-out;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .md-card-header {
+    margin: -1rem 1rem 0;
+    padding: 1rem;
+  }
+
+  .btn-material {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ===== STATUS INDICATORS ===== */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-indicator .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-indicator.text-success .dot {
+  background-color: var(--md-success);
+}
+
+.status-indicator.text-danger .dot {
+  background-color: var(--md-error);
+}
+
+.status-indicator.text-warning .dot {
+  background-color: var(--md-warning);
+}
+
+.status-indicator.text-info .dot {
+  background-color: var(--md-info);
+}
+
+.status-indicator.text-primary .dot {
+  background-color: var(--md-primary);
+}
+
+.status-indicator.text-secondary .dot {
+  background-color: var(--md-secondary);
+}

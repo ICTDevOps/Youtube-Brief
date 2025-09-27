@@ -61,26 +61,50 @@ export class JobStatusService {
     return this.activePolls.size;
   }
 
-  cancelJob(jobId: string): boolean {
+  async cancelJob(jobId: string): Promise<boolean> {
+    console.log(`Attempting to cancel job: ${jobId}`);
+
+    // First try to find job in active polls
     const context = this.activePolls.get(jobId);
-    if (!context) {
-      return false; // Job not found or already stopped
+
+    if (context) {
+      console.log(`Found job ${jobId} in active polls, stopping polling and updating status`);
+      // Stop the polling
+      this.stopPolling(jobId);
+
+      // Update the log to indicate cancellation
+      await this.storage.updateLog(context.logId, {
+        status: 'cancelled',
+        message: 'Exécution annulée par l\'utilisateur',
+        finishedAt: new Date().toISOString(),
+      });
+
+      console.log(`Job ${jobId} cancelled by user - polling stopped and status updated to 'cancelled'`);
+      return true;
     }
 
-    // Stop the polling
-    this.stopPolling(jobId);
+    // If not in active polls, try to find the log directly and cancel it
+    console.log(`Job ${jobId} not found in active polls, searching in logs...`);
+    const logs = await this.storage.listLogs(0, 100); // Get recent logs
 
-    // Update the log to indicate cancellation
-    this.storage.updateLog(context.logId, {
-      status: 'cancelled',
-      message: 'Exécution annulée par l\'utilisateur',
-      finishedAt: new Date().toISOString(),
-    }).catch(error => {
-      console.error(`Failed to update log ${context.logId} for cancellation:`, error);
-    });
+    const targetLog = logs.items.find(log =>
+      log.jobId === jobId && (log.status === 'running' || log.status === 'started' || log.status === 'pending')
+    );
 
-    console.log(`Job ${jobId} cancelled by user - polling stopped and status updated to 'cancelled'`);
-    return true;
+    if (targetLog) {
+      console.log(`Found log ${targetLog.id} for job ${jobId}, updating status to cancelled`);
+      await this.storage.updateLog(targetLog.id, {
+        status: 'cancelled',
+        message: 'Exécution annulée par l\'utilisateur',
+        finishedAt: new Date().toISOString(),
+      });
+
+      console.log(`Job ${jobId} cancelled by user - status updated to 'cancelled' in logs`);
+      return true;
+    }
+
+    console.log(`Job ${jobId} not found in active polls or logs`);
+    return false; // Job not found
   }
 
   getActiveJobs(): Array<{ jobId: string; logId: string; startTime: number }> {

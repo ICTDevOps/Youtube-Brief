@@ -545,7 +545,7 @@ function updateLogRow(row, log) {
   row.innerHTML = `
     <td>${resolveChannelName(log.channelId)}</td>
     <td>
-      <span class="badge ${getLogBadgeClass(log.status)}">
+      <span class="badge badge-material ${getLogBadgeClass(log.status)}">
         ${getLogStatusText(log.status)}
       </span>
     </td>
@@ -557,20 +557,24 @@ function updateLogRow(row, log) {
       ${canCancel ? `
         <div class="dropdown">
           <button
-            class="btn btn-outline-secondary btn-sm"
+            class="btn btn-outline-secondary btn-sm dropdown-toggle"
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
+            title="${i18n.t('actions.actions') || 'Actions'}"
             style="min-width: 32px;">
-            ...
+            <i data-feather="more-horizontal" style="width: 16px; height: 16px;"></i>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu dropdown-menu-end">
             <li>
               <button
                 class="dropdown-item text-danger"
-                onclick="showCancelJobModal('${log.jobId}', '${log.id}')"
-                data-i18n="actions.cancel">
-                Annuler
+                type="button"
+                data-action="cancel-job"
+                data-job-id="${log.jobId}"
+                data-log-id="${log.id}">
+                <i data-feather="x-circle" class="me-2" style="width: 16px; height: 16px;"></i>
+                ${i18n.t('actions.cancel') || 'Annuler'}
               </button>
             </li>
           </ul>
@@ -594,13 +598,13 @@ function getLogStatusClass(status) {
 
 function getLogBadgeClass(status) {
   switch (status) {
-    case 'success': return 'text-bg-success';
-    case 'error': return 'text-bg-danger';
-    case 'pending': return 'text-bg-warning';
-    case 'started': return 'text-bg-info';
-    case 'running': return 'text-bg-primary';
-    case 'cancelled': return 'text-bg-secondary';
-    default: return 'text-bg-secondary';
+    case 'success': return 'badge-success';
+    case 'error': return 'badge-error';
+    case 'pending': return 'badge-warning';
+    case 'started': return 'badge-info';
+    case 'running': return 'badge-primary';
+    case 'cancelled': return 'badge-secondary';
+    default: return 'badge-secondary';
   }
 }
 
@@ -624,26 +628,40 @@ function validateEmail(email) {
 let currentJobToCancel = { jobId: null, logId: null };
 
 function showCancelJobModal(jobId, logId) {
+  console.log('showCancelJobModal called with:', { jobId, logId });
   currentJobToCancel = { jobId, logId };
   confirmCancelJobModal.show();
 }
 
+// Make function globally available for onclick handlers
+window.showCancelJobModal = showCancelJobModal;
+
 async function cancelJob() {
+  console.log('cancelJob called with:', currentJobToCancel);
   const { jobId, logId } = currentJobToCancel;
-  if (!jobId || !logId) return;
+
+  if (!jobId || !logId) {
+    console.error('Missing jobId or logId:', { jobId, logId });
+    return;
+  }
 
   try {
+    console.log('Making API call to cancel job:', jobId);
     const response = await fetchJSON(`/api/jobs/${jobId}/cancel`, { method: 'POST' });
-    if (response.success) {
+    console.log('API response:', response);
+
+    if (response && response.success) {
       showToast(i18n.t('messages.jobCancelled') || 'Exécution annulée avec succès', 'success');
       // Refresh logs to show updated status
       await loadLogs();
       // Hide modal
       confirmCancelJobModal.hide();
     } else {
-      showToast(response.message || 'Erreur lors de l\'annulation', 'danger');
+      console.error('API call failed:', response);
+      showToast(response?.message || 'Erreur lors de l\'annulation', 'danger');
     }
   } catch (error) {
+    console.error('Error cancelling job:', error);
     showToast(error.message || 'Erreur lors de l\'annulation', 'danger');
   }
 
@@ -706,6 +724,12 @@ function validateEmailsInput() {
 
 function completeLogRendering() {
   elements.logsCountBadge.innerHTML = i18n.t('messages.executionsCount', {count: state.logsTotal}) || `${state.logsTotal} exécutions`;
+
+  // Initialize tooltips and Feather icons for newly rendered content
+  initializeTooltips();
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
 }
 
 function updatePagination() {
@@ -1067,6 +1091,21 @@ function registerEventListeners() {
   // Confirm cancel job button
   elements.confirmCancelJobButton?.addEventListener("click", async () => {
     await cancelJob();
+  });
+
+  // Handle cancel job buttons in logs table
+  elements.logsTableBody?.addEventListener("click", async (event) => {
+    const actionElement = event.target.closest("button[data-action]");
+    if (!actionElement) return;
+
+    const action = actionElement.dataset.action;
+    const jobId = actionElement.dataset.jobId;
+    const logId = actionElement.dataset.logId;
+
+    if (action === "cancel-job" && jobId && logId) {
+      console.log('Cancel job clicked:', { jobId, logId });
+      showCancelJobModal(jobId, logId);
+    }
   });
 
   elements.settingsForm?.addEventListener("submit", async (event) => {
