@@ -238,99 +238,141 @@
       </div>
     </div>
 
-    <div class="modal modal-blur fade" id="channel-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal modal-blur fade md-channel-modal" id="channel-modal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="channel-modal-title" data-i18n="forms.channelModal.titleNew">Nouvelle chaîne</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form id="channel-form">
-            <div class="modal-body d-grid gap-3">
-              <input type="hidden" id="channel-id" />
+          <form id="channel-form" class="md-settings-form md-channel-form">
+            <div class="modal-header">
               <div>
-                <label class="form-label" for="channel-name" data-i18n="forms.channelModal.channelName">Nom de la chaîne</label>
-                <input class="form-control" id="channel-name" name="channelName" type="text" required />
+                <h5 class="modal-title" id="channel-modal-title" data-i18n="forms.channelModal.titleNew">Nouvelle chaîne</h5>
+                <p class="md-settings-subtitle" data-i18n="forms.channelModal.subtitle">Configurez la programmation et les destinataires pour cette chaîne YouTube.</p>
               </div>
-              <div>
-                <label class="form-label" for="channel-youtube-id" data-i18n="forms.channelModal.youtubeChannelId">Identifiant YouTube</label>
-                <input class="form-control" id="channel-youtube-id" name="youtubeChannelId" type="text" required />
-              </div>
-              <div>
-                <label class="form-label" data-i18n="forms.channelModal.scheduling">Planification</label>
-                <input type="hidden" id="channel-cron" name="cronExpression" />
-
-                <div class="row g-3">
-                  <div class="col-6">
-                    <label class="form-label" for="schedule-frequency" data-i18n="forms.channelModal.frequency">Fréquence</label>
-                    <select class="form-select" id="schedule-frequency" required>
-                      <option value="" data-i18n="forms.channelModal.frequencies.choose">Choisir une fréquence</option>
-                      <option value="daily" data-i18n="forms.channelModal.frequencies.daily">Tous les jours</option>
-                      <option value="weekly" data-i18n="forms.channelModal.frequencies.weekly">Chaque semaine</option>
-                      <option value="monthly" data-i18n="forms.channelModal.frequencies.monthly">Chaque mois</option>
-                      <option value="custom" data-i18n="forms.channelModal.frequencies.custom">Personnalisé</option>
-                    </select>
-                  </div>
-                  <div class="col-6">
-                    <label class="form-label" for="schedule-time" data-i18n="forms.channelModal.time">Heure</label>
-                    <input class="form-control" id="schedule-time" type="time" required />
-                  </div>
-                </div>
-
-                <div class="row g-3 mt-1" id="weekly-options" style="display: none;">
-                  <div class="col-12">
-                    <label class="form-label" for="schedule-weekday" data-i18n="forms.channelModal.weekday">Jour de la semaine</label>
-                    <select class="form-select" id="schedule-weekday">
-                      <option value="1" data-i18n="forms.channelModal.weekdays.monday">Lundi</option>
-                      <option value="2" data-i18n="forms.channelModal.weekdays.tuesday">Mardi</option>
-                      <option value="3" data-i18n="forms.channelModal.weekdays.wednesday">Mercredi</option>
-                      <option value="4" data-i18n="forms.channelModal.weekdays.thursday">Jeudi</option>
-                      <option value="5" data-i18n="forms.channelModal.weekdays.friday">Vendredi</option>
-                      <option value="6" data-i18n="forms.channelModal.weekdays.saturday">Samedi</option>
-                      <option value="0" data-i18n="forms.channelModal.weekdays.sunday">Dimanche</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row g-3 mt-1" id="monthly-options" style="display: none;">
-                  <div class="col-12">
-                    <label class="form-label" for="schedule-monthday" data-i18n="forms.channelModal.monthday">Jour du mois</label>
-                    <input class="form-control" id="schedule-monthday" type="number" min="1" max="31" value="1" />
-                  </div>
-                </div>
-
-                <div class="mt-2" id="custom-options" style="display: none;">
-                  <label class="form-label" for="schedule-custom-cron" data-i18n="forms.channelModal.customCron">Expression CRON</label>
-                  <input class="form-control" id="schedule-custom-cron" type="text" placeholder="0 9 * * 1" />
-                </div>
-
-                <div class="mt-2">
-                  <small class="text-muted" id="cron-preview" data-i18n="forms.channelModal.cronPreview" data-i18n-params='{"expression": "-"}'>Expression générée: -</small>
-                </div>
-              </div>
-              <div class="row g-3">
-                <div class="col-6">
-                  <label class="form-label" for="channel-video-limit" data-i18n="forms.channelModal.videoLimit">Nombre de vidéos</label>
-                  <input class="form-control" id="channel-video-limit" name="videoLimit" type="number" min="1" max="50" value="5" required />
-                  <div class="form-text" data-i18n="forms.channelModal.videoLimitHelp">Maximum de vidéos à récupérer</div>
-                </div>
-                <div class="col-6">
-                  <label class="form-label" for="channel-days-back" data-i18n="forms.channelModal.daysBack">Jours en arrière</label>
-                  <input class="form-control" id="channel-days-back" name="daysBack" type="number" min="1" max="30" value="7" required />
-                  <div class="form-text" data-i18n="forms.channelModal.daysBackHelp">Période de recherche en jours</div>
-                </div>
-              </div>
-              <div>
-                <label class="form-label" for="channel-emails" data-i18n="forms.channelModal.emails">Adresses emails destinataires <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="channel-emails" name="emails" rows="3" placeholder="email1@example.com, email2@example.com..." required></textarea>
-                <div class="form-text" data-i18n="forms.channelModal.emailsHelp">Séparez les adresses emails par des virgules. Ces adresses recevront les notifications du workflow N8N.</div>
-              </div>
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="channel-active" checked />
-                <label class="form-check-label" for="channel-active" data-i18n="forms.channelModal.active">Chaîne active</label>
-              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
+            <div class="modal-body md-settings-body">
+              <input type="hidden" id="channel-id" />
+
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-channel-icon--info">subscriptions</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.channelModal.detailsTitle">Informations générales</h2>
+                    <p class="md-settings-description" data-i18n="forms.channelModal.detailsDescription">Nommez la chaîne et indiquez l’identifiant YouTube à surveiller.</p>
+                  </div>
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="channel-name" data-i18n="forms.channelModal.channelName">Nom de la chaîne</label>
+                  <input class="form-control md-field-input" id="channel-name" name="channelName" type="text" required />
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="channel-youtube-id" data-i18n="forms.channelModal.youtubeChannelId">Identifiant YouTube</label>
+                  <input class="form-control md-field-input" id="channel-youtube-id" name="youtubeChannelId" type="text" required />
+                </div>
+              </section>
+
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-channel-icon--schedule">schedule</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.channelModal.scheduleTitle">Planification</h2>
+                    <p class="md-settings-description" data-i18n="forms.channelModal.scheduleDescription">Choisissez la fréquence, l’heure et les paramètres avancés de planification.</p>
+                  </div>
+                </div>
+                <input type="hidden" id="channel-cron" name="cronExpression" />
+                <div class="row g-3">
+                  <div class="col-12 col-sm-6">
+                    <div class="md-field">
+                      <label class="md-field-label" for="schedule-frequency" data-i18n="forms.channelModal.frequency">Fréquence</label>
+                      <select class="form-select md-field-input" id="schedule-frequency" required>
+                        <option value="" data-i18n="forms.channelModal.frequencies.choose">Choisir une fréquence</option>
+                        <option value="daily" data-i18n="forms.channelModal.frequencies.daily">Tous les jours</option>
+                        <option value="weekly" data-i18n="forms.channelModal.frequencies.weekly">Chaque semaine</option>
+                        <option value="monthly" data-i18n="forms.channelModal.frequencies.monthly">Chaque mois</option>
+                        <option value="custom" data-i18n="forms.channelModal.frequencies.custom">Personnalisé</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <div class="md-field">
+                      <label class="md-field-label" for="schedule-time" data-i18n="forms.channelModal.time">Heure</label>
+                      <input class="form-control md-field-input" id="schedule-time" type="time" required />
+                    </div>
+                  </div>
+                </div>
+                <div class="md-field" id="weekly-options" style="display: none;">
+                  <label class="md-field-label" for="schedule-weekday" data-i18n="forms.channelModal.weekday">Jour de la semaine</label>
+                  <select class="form-select md-field-input" id="schedule-weekday">
+                    <option value="1" data-i18n="forms.channelModal.weekdays.monday">Lundi</option>
+                    <option value="2" data-i18n="forms.channelModal.weekdays.tuesday">Mardi</option>
+                    <option value="3" data-i18n="forms.channelModal.weekdays.wednesday">Mercredi</option>
+                    <option value="4" data-i18n="forms.channelModal.weekdays.thursday">Jeudi</option>
+                    <option value="5" data-i18n="forms.channelModal.weekdays.friday">Vendredi</option>
+                    <option value="6" data-i18n="forms.channelModal.weekdays.saturday">Samedi</option>
+                    <option value="0" data-i18n="forms.channelModal.weekdays.sunday">Dimanche</option>
+                  </select>
+                </div>
+                <div class="md-field" id="monthly-options" style="display: none;">
+                  <label class="md-field-label" for="schedule-monthday" data-i18n="forms.channelModal.monthday">Jour du mois</label>
+                  <input class="form-control md-field-input" id="schedule-monthday" type="number" min="1" max="31" value="1" />
+                </div>
+                <div class="md-field" id="custom-options" style="display: none;">
+                  <label class="md-field-label" for="schedule-custom-cron" data-i18n="forms.channelModal.customCron">Expression CRON</label>
+                  <input class="form-control md-field-input" id="schedule-custom-cron" type="text" placeholder="0 9 * * 1" />
+                </div>
+                <p class="md-cron-preview" id="cron-preview" data-i18n="forms.channelModal.cronPreview" data-i18n-params='{"expression": "-"}'>Expression générée: -</p>
+              </section>
+
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-channel-icon--limits">tune</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.channelModal.limitsTitle">Périmètre d'analyse</h2>
+                    <p class="md-settings-description" data-i18n="forms.channelModal.limitsDescription">Définissez le nombre de vidéos à récupérer et la fenêtre temporelle.</p>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-12 col-sm-6">
+                    <div class="md-field">
+                      <label class="md-field-label" for="channel-video-limit" data-i18n="forms.channelModal.videoLimit">Nombre de vidéos</label>
+                      <input class="form-control md-field-input" id="channel-video-limit" name="videoLimit" type="number" min="1" max="50" value="5" required />
+                      <div class="form-text" data-i18n="forms.channelModal.videoLimitHelp">Maximum de vidéos à récupérer</div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <div class="md-field">
+                      <label class="md-field-label" for="channel-days-back" data-i18n="forms.channelModal.daysBack">Jours en arrière</label>
+                      <input class="form-control md-field-input" id="channel-days-back" name="daysBack" type="number" min="1" max="30" value="7" required />
+                      <div class="form-text" data-i18n="forms.channelModal.daysBackHelp">Période de recherche en jours</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-channel-icon--notifications">mail</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.channelModal.notificationsTitle">Notifications</h2>
+                    <p class="md-settings-description" data-i18n="forms.channelModal.notificationsDescription">Choisissez les destinataires et l'état actif de la chaîne.</p>
+                  </div>
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="channel-emails" data-i18n="forms.channelModal.emails">Adresses emails destinataires <span class="text-danger">*</span></label>
+                  <textarea class="form-control md-field-input" id="channel-emails" name="emails" rows="3" placeholder="email1@example.com, email2@example.com..." required></textarea>
+                  <div class="form-text" data-i18n="forms.channelModal.emailsHelp">Séparez les adresses emails par des virgules. Ces adresses recevront les notifications du workflow N8N.</div>
+                </div>
+                <div class="md-switch-row">
+                  <div>
+                    <p class="md-switch-title" data-i18n="forms.channelModal.active">Chaîne active</p>
+                    <p class="md-switch-description" data-i18n="forms.channelModal.activeHelp">Décochez pour suspendre temporairement la récupération.</p>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="channel-active" checked />
+                  </div>
+                </div>
+              </section>
+            </div>
+            <div class="modal-footer md-settings-footer">
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-i18n="forms.channelModal.cancel">Annuler</button>
               <button type="submit" class="btn btn-primary" id="channel-save-button" data-i18n="forms.channelModal.save">Enregistrer</button>
             </div>
@@ -357,49 +399,84 @@
       </div>
     </div>
 
-    <div class="modal fade" id="settings-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade md-settings-modal" id="settings-modal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" data-i18n="forms.settingsModal.title">Paramètres</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form id="settings-form">
-            <div class="modal-body d-grid gap-3">
+          <form id="settings-form" class="md-settings-form">
+            <div class="modal-header">
               <div>
-                <label class="form-label" for="settings-webhook" data-i18n="forms.settingsModal.webhook">Webhook N8N</label>
-                <input class="form-control" id="settings-webhook" name="n8nWebhookUrl" type="url" placeholder="https://n8n.example.com/webhook/..." />
-                <div class="form-text" data-i18n="forms.settingsModal.webhookHelp">URL du webhook N8N à déclencher lors des planifications</div>
+                <h1 class="modal-title" data-i18n="forms.settingsModal.title">Paramètres</h1>
+                <p class="md-settings-subtitle" data-i18n="forms.settingsModal.subtitle">Configurez les intégrations et la sécurité de votre orchestrateur.</p>
               </div>
-              <div>
-                <label class="form-label" for="settings-status-webhook" data-i18n="forms.settingsModal.statusWebhook">Webhook N8N Status</label>
-                <input class="form-control" id="settings-status-webhook" name="n8nStatusWebhookUrl" type="url" placeholder="https://n8n.example.com/webhook/status..." />
-                <div class="form-text" data-i18n="forms.settingsModal.statusWebhookHelp">URL du webhook N8N pour surveiller le statut des jobs</div>
-              </div>
-              <div class="row g-3">
-                <div class="col-6">
-                  <label class="form-label" for="settings-polling-interval" data-i18n="forms.settingsModal.pollingInterval">Intervalle de polling (ms)</label>
-                  <input class="form-control" id="settings-polling-interval" name="pollingIntervalMs" type="number" min="1000" step="1000" />
-                  <div class="form-text" data-i18n="forms.settingsModal.pollingIntervalHelp">Fréquence de vérification du statut (minimum 1000ms)</div>
-                </div>
-                <div class="col-6">
-                  <label class="form-label" for="settings-polling-timeout" data-i18n="forms.settingsModal.pollingTimeout">Timeout polling (ms)</label>
-                  <input class="form-control" id="settings-polling-timeout" name="pollingTimeoutMs" type="number" min="60000" step="60000" />
-                  <div class="form-text" data-i18n="forms.settingsModal.pollingTimeoutHelp">Durée maximale de surveillance (minimum 60000ms)</div>
-                </div>
-              </div>
-              <div class="row g-3">
-                <div class="col-12">
-                  <label class="form-label" for="settings-username" data-i18n="forms.settingsModal.username">Identifiant administrateur</label>
-                  <input class="form-control" id="settings-username" name="adminUsername" type="text" />
-                </div>
-                <div class="col-12">
-                  <label class="form-label" for="settings-password" data-i18n="forms.settingsModal.password">Nouveau mot de passe</label>
-                  <input class="form-control" id="settings-password" name="adminPassword" type="password" data-i18n="forms.settingsModal.passwordHelp" data-i18n-attr="placeholder" placeholder="Laisser vide pour conserver le mot de passe actuel" />
-                </div>
-              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
+            <div class="modal-body md-settings-body">
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-settings-icon--webhook">sync_alt</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.settingsModal.webhooksTitle">Webhooks N8N</h2>
+                    <p class="md-settings-description" data-i18n="forms.settingsModal.webhooksDescription">Définissez l'URL principale pour déclencher vos workflows et l'URL de suivi optionnelle.</p>
+                  </div>
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="settings-webhook" data-i18n="forms.settingsModal.webhook">Webhook N8N</label>
+                  <input class="form-control md-field-input" id="settings-webhook" name="n8nWebhookUrl" type="url" placeholder="https://n8n.example.com/webhook/..." />
+                  <div class="form-text" data-i18n="forms.settingsModal.webhookHelp">URL du webhook N8N à déclencher lors des planifications</div>
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="settings-status-webhook" data-i18n="forms.settingsModal.statusWebhook">Webhook N8N Status</label>
+                  <input class="form-control md-field-input" id="settings-status-webhook" name="n8nStatusWebhookUrl" type="url" placeholder="https://n8n.example.com/webhook/status..." />
+                  <div class="form-text" data-i18n="forms.settingsModal.statusWebhookHelp">URL du webhook N8N pour surveiller le statut des jobs</div>
+                </div>
+              </section>
+
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-settings-icon--polling">query_stats</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.settingsModal.pollingTitle">Surveillance</h2>
+                    <p class="md-settings-description" data-i18n="forms.settingsModal.pollingDescription">Ajustez la fréquence de mise à jour des jobs et la durée maximale de suivi.</p>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-12 col-sm-6">
+                    <div class="md-field">
+                      <label class="md-field-label" for="settings-polling-interval" data-i18n="forms.settingsModal.pollingInterval">Intervalle de polling (ms)</label>
+                      <input class="form-control md-field-input" id="settings-polling-interval" name="pollingIntervalMs" type="number" min="1000" step="1000" />
+                      <div class="form-text" data-i18n="forms.settingsModal.pollingIntervalHelp">Fréquence de vérification du statut (minimum 1000ms)</div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <div class="md-field">
+                      <label class="md-field-label" for="settings-polling-timeout" data-i18n="forms.settingsModal.pollingTimeout">Timeout polling (ms)</label>
+                      <input class="form-control md-field-input" id="settings-polling-timeout" name="pollingTimeoutMs" type="number" min="60000" step="60000" />
+                      <div class="form-text" data-i18n="forms.settingsModal.pollingTimeoutHelp">Durée maximale de surveillance (minimum 60000ms)</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="md-settings-section">
+                <div class="md-settings-header">
+                  <span class="material-icons-round md-settings-icon md-settings-icon--security">lock</span>
+                  <div>
+                    <h2 class="md-settings-title" data-i18n="forms.settingsModal.securityTitle">Authentification</h2>
+                    <p class="md-settings-description" data-i18n="forms.settingsModal.securityDescription">Mettez à jour l’identifiant administrateur ou définissez un nouveau mot de passe.</p>
+                  </div>
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="settings-username" data-i18n="forms.settingsModal.username">Identifiant administrateur</label>
+                  <input class="form-control md-field-input" id="settings-username" name="adminUsername" type="text" />
+                </div>
+                <div class="md-field">
+                  <label class="md-field-label" for="settings-password" data-i18n="forms.settingsModal.password">Nouveau mot de passe</label>
+                  <input class="form-control md-field-input" id="settings-password" name="adminPassword" type="password" data-i18n="forms.settingsModal.passwordHelp" data-i18n-attr="placeholder" placeholder="Laisser vide pour conserver le mot de passe actuel" />
+                  <div class="form-text" data-i18n="forms.settingsModal.passwordHelp">Laisser vide pour conserver le mot de passe actuel</div>
+                </div>
+              </section>
+            </div>
+            <div class="modal-footer md-settings-footer">
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" data-i18n="forms.settingsModal.cancel">Annuler</button>
               <button type="submit" class="btn btn-primary" data-i18n="forms.settingsModal.save">Enregistrer</button>
             </div>
