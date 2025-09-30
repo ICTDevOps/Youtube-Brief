@@ -11,7 +11,8 @@
     "accessMessage": "Access your YouTube monitoring assistant"
   },
   "nav": {
-    "title": "YT Brief",
+    "title": "YouTube Brief",
+    "subtitle": "Plan, trigger and supervise your summaries",
     "refresh": "Refresh",
     "settings": "Settings"
   },
@@ -175,6 +176,11 @@
     "label": "Language",
     "french": "Français",
     "english": "English"
+  },
+  "metrics": {
+    "totalChannels": "Active channels",
+    "nextRun": "Next run",
+    "activeJobs": "Monitored jobs"
   },
   "status": {
     "active": "Active",

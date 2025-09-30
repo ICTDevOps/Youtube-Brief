@@ -11,7 +11,8 @@
     "accessMessage": "Accédez à votre assistant de veille YouTube"
   },
   "nav": {
-    "title": "YT Brief",
+    "title": "YouTube Brief",
+    "subtitle": "Planifiez, déclenchez et supervisez vos résumés",
     "refresh": "Actualiser",
     "settings": "Paramètres"
   },
@@ -175,6 +176,11 @@
     "label": "Langue",
     "french": "Français",
     "english": "English"
+  },
+  "metrics": {
+    "totalChannels": "Chaînes actives",
+    "nextRun": "Prochaine exécution",
+    "activeJobs": "Jobs surveillés"
   },
   "status": {
     "active": "Actif",

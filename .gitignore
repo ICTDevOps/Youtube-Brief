@@ -53,3 +53,6 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# html_templates
+html_templates/

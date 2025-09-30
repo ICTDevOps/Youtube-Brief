@@ -272,6 +272,7 @@ function formatStatus(channel) {
 
 function renderChannels() {
   if (!elements.channelsTableBody) return;
+  closeChannelDropdowns();
   elements.channelsTableBody.innerHTML = "";
 
   if (!state.channels.length) {
@@ -314,25 +315,25 @@ function renderChannels() {
                     data-bs-auto-close="true"
                     aria-expanded="false"
                     title="Actions">
-              <i data-feather="more-horizontal"></i>
+              <span class="material-icons-outlined">more_vert</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
                 <a class="dropdown-item" href="#" data-action="edit" data-id="${channel.id}">
-                  <i data-feather="settings" class="me-2" style="width: 16px; height: 16px;"></i>
+                  <span class="material-icons-outlined me-2">edit</span>
                   ${i18n.t('actions.edit') || 'Modifier'}
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" href="#" data-action="trigger" data-id="${channel.id}">
-                  <i data-feather="play" class="me-2 text-success" style="width: 16px; height: 16px;"></i>
+                  <span class="material-icons-outlined me-2 text-success">play_arrow</span>
                   ${i18n.t('actions.trigger') || 'Déclencher'}
                 </a>
               </li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item text-danger" href="#" data-action="remove" data-id="${channel.id}" data-name="${channel.channelName}">
-                  <i data-feather="x" class="me-2" style="width: 16px; height: 16px;"></i>
+                  <span class="material-icons-outlined me-2">delete</span>
                   ${i18n.t('actions.remove') || 'Supprimer'}
                 </a>
               </li>
@@ -345,12 +346,7 @@ function renderChannels() {
 
   // Initialize tooltips for action buttons
   initializeTooltips();
-  // Initialize Feather icons
-  if (typeof feather !== 'undefined') {
-    feather.replace();
-  }
-  // Initialize dropdowns with custom configuration
-  initializeDropdowns();
+  setupChannelDropdowns();
 }
 
 function initializeTooltips() {
@@ -359,50 +355,176 @@ function initializeTooltips() {
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new window.bootstrap.Tooltip(tooltipTriggerEl));
 }
 
-function initializeDropdowns() {
-  // Initialize dropdowns with custom boundary settings to escape scroll containers
-  const dropdownElements = document.querySelectorAll('.table-actions .dropdown-toggle');
-  
-  dropdownElements.forEach(dropdownToggle => {
-    if (window.bootstrap && window.bootstrap.Dropdown) {
-      new window.bootstrap.Dropdown(dropdownToggle, {
-        boundary: 'viewport',
-        popperConfig: {
-          strategy: 'fixed',
-          placement: 'bottom-end',
-          modifiers: [
-            {
-              name: 'preventOverflow',
-              options: {
-                boundary: 'viewport',
-                rootBoundary: 'viewport'
-              }
-            },
-            {
-              name: 'flip',
-              options: {
-                boundary: 'viewport',
-                fallbackPlacements: ['bottom-end', 'top-end', 'bottom-start', 'top-start']
-              }
-            },
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 4]
-              }
-            },
-            {
-              name: 'computeStyles',
-              options: {
-                adaptive: false,
-                gpuAcceleration: false
-              }
-            }
-          ]
-        }
-      });
+const dropdownManager = {
+  listenersAttached: false,
+  mode: 'unknown',
+};
+
+const dropdownPopperOptions = {
+  popperConfig: {
+    strategy: 'fixed',
+    placement: 'bottom-end',
+    modifiers: [
+      {
+        name: 'offset',
+        options: { offset: [0, 6] },
+      },
+      {
+        name: 'preventOverflow',
+        options: { boundary: document.body, padding: 8 },
+      },
+      {
+        name: 'flip',
+        options: { fallbackPlacements: ['bottom-end', 'top-end', 'bottom-start'] },
+      },
+    ],
+  },
+};
+
+function setupChannelDropdowns() {
+const dropdownButtons = document.querySelectorAll('.table-actions [data-bs-toggle="dropdown"]');
+  const bootstrapDropdown = window.bootstrap?.Dropdown;
+
+  dropdownButtons.forEach((button) => {
+    if (button.dataset.dropdownEnhanced === 'true') {
+      return;
     }
+
+    const menu = button.nextElementSibling;
+    if (!(menu instanceof HTMLElement) || !menu.classList.contains('dropdown-menu')) {
+      return;
+    }
+
+    button.dataset.dropdownEnhanced = 'true';
+
+    if (bootstrapDropdown) {
+      dropdownManager.mode = 'bootstrap';
+      bootstrapDropdown.getOrCreateInstance(button, dropdownPopperOptions);
+
+      button.addEventListener('show.bs.dropdown', () => {
+        setDropdownRowState(button, true);
+      });
+
+      button.addEventListener('hide.bs.dropdown', () => {
+        setDropdownRowState(button, false);
+      });
+      return;
+    }
+
+    dropdownManager.mode = 'fallback';
+
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleChannelDropdown(button, menu);
+    });
+
+    menu.addEventListener('click', () => {
+      closeChannelDropdowns();
+    });
   });
+
+  if (!dropdownManager.listenersAttached && dropdownManager.mode === 'fallback') {
+    dropdownManager.listenersAttached = true;
+
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('.table-actions')) {
+        closeChannelDropdowns();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeChannelDropdowns();
+      }
+    });
+  }
+}
+
+function toggleChannelDropdown(button, menu) {
+  const bootstrapDropdown = window.bootstrap?.Dropdown;
+  const wasOpen = menu.classList.contains('show') || button.getAttribute('aria-expanded') === 'true';
+
+  closeChannelDropdowns(button);
+
+  if (bootstrapDropdown) {
+    const instance = bootstrapDropdown.getOrCreateInstance(button, dropdownPopperOptions);
+    if (wasOpen) {
+      instance.hide();
+    } else {
+      instance.show();
+    }
+    return;
+  }
+
+  if (wasOpen) {
+    button.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('show');
+    menu.style.top = '';
+    menu.style.left = '';
+    setDropdownRowState(button, false);
+    return;
+  }
+
+  openFallbackDropdown(button, menu);
+  setDropdownRowState(button, true);
+}
+
+function openFallbackDropdown(button, menu) {
+  menu.classList.add('show');
+  menu.style.visibility = 'hidden';
+  menu.style.display = 'block';
+
+  const buttonRect = button.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+
+  const top = window.scrollY + buttonRect.bottom + 6;
+  const left = window.scrollX + buttonRect.right - menuRect.width;
+
+  menu.style.top = Math.max(0, top) + 'px';
+  menu.style.left = Math.max(16, left) + 'px';
+
+  menu.style.visibility = '';
+  menu.style.display = '';
+  button.setAttribute('aria-expanded', 'true');
+}
+
+function closeChannelDropdowns(exceptButton) {
+  const bootstrapDropdown = window.bootstrap?.Dropdown;
+
+  document.querySelectorAll('.table-actions [data-bs-toggle="dropdown"]').forEach((button) => {
+    if (button === exceptButton) {
+      return;
+    }
+
+    const menu = button.nextElementSibling;
+    if (!(menu instanceof HTMLElement) || !menu.classList.contains('dropdown-menu')) {
+      return;
+    }
+
+    if (bootstrapDropdown) {
+      const instance = bootstrapDropdown.getInstance(button);
+      instance?.hide();
+    }
+
+    menu.classList.remove('show');
+    menu.style.top = '';
+    menu.style.left = '';
+    button.setAttribute('aria-expanded', 'false');
+    setDropdownRowState(button, false);
+  });
+}
+
+function setDropdownRowState(button, isOpen) {
+  const row = button.closest('tr');
+  if (!row) {
+    return;
+  }
+  if (isOpen) {
+    row.classList.add('dropdown-open-row');
+  } else {
+    row.classList.remove('dropdown-open-row');
+  }
 }
 
 function generateCronExpression() {
@@ -562,7 +684,7 @@ function updateLogRow(row, log) {
             data-bs-toggle="dropdown"
             aria-expanded="false"
             style="min-width: 32px;">
-            ...
+            <span class="material-icons-outlined">more_horiz</span>
           </button>
           <ul class="dropdown-menu">
             <li>
@@ -746,6 +868,51 @@ function resolveChannelName(channelId) {
   return channel ? channel.channelName : channelId;
 }
 
+function updateDashboardMetrics() {
+  const channelsValueEl = document.getElementById("metric-channels");
+  const nextRunEl = document.getElementById("metric-next-run");
+  const nextRunChannelEl = document.getElementById("metric-next-channel");
+  const activeJobsEl = document.getElementById("metric-active-jobs");
+
+  if (channelsValueEl) {
+    const activeCount = state.channels.filter((channel) => channel.isActive).length;
+    const totalCount = state.channels.length;
+    channelsValueEl.textContent = totalCount > 0 ? `${activeCount}/${totalCount}` : "0";
+    channelsValueEl.setAttribute("title", `${activeCount} / ${totalCount}`);
+  }
+
+  if (nextRunEl) {
+    const upcomingChannels = state.channels
+      .filter((channel) => Boolean(channel.nextExecution))
+      .map((channel) => ({
+        channel,
+        date: new Date(channel.nextExecution),
+      }))
+      .filter((item) => !Number.isNaN(item.date.getTime()))
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    if (upcomingChannels.length > 0) {
+      const nextItem = upcomingChannels[0];
+      nextRunEl.textContent = formatDateTime(nextItem.channel.nextExecution);
+      if (nextRunChannelEl) {
+        nextRunChannelEl.textContent = nextItem.channel.channelName;
+      }
+    } else {
+      nextRunEl.textContent = "—";
+      if (nextRunChannelEl) {
+        nextRunChannelEl.textContent = "—";
+      }
+    }
+  } else if (nextRunChannelEl) {
+    nextRunChannelEl.textContent = "—";
+  }
+
+  if (activeJobsEl) {
+    const activeJobs = state.settings?.activeJobsCount ?? 0;
+    activeJobsEl.textContent = activeJobs.toString();
+  }
+}
+
 async function loadSession() {
   const session = await fetchJSON("/api/session");
   state.session = session;
@@ -766,11 +933,14 @@ async function loadSettings() {
     elements.settingsUsername.value = state.settings.adminUsername ?? "";
     elements.settingsPassword.value = "";
   }
+
+  updateDashboardMetrics();
 }
 
 async function loadChannels() {
   state.channels = await fetchJSON("/api/channels");
   renderChannels();
+  updateDashboardMetrics();
 }
 
 async function loadLogs(page = state.logsCurrentPage) {
@@ -787,6 +957,8 @@ async function loadLogs(page = state.logsCurrentPage) {
 
   renderLogs();
   updatePagination();
+  updateDashboardMetrics();
+  await refreshActiveJobsCount();
 }
 
 function resetChannelForm() {
@@ -1102,11 +1274,8 @@ async function bootstrap() {
     if (state.session?.authenticated) {
       await Promise.all([loadSettings(), loadChannels(), loadLogs()]);
     }
-    // Initialize tooltips and icons on page load
+    // Initialize tooltips on page load
     initializeTooltips();
-    if (typeof feather !== 'undefined') {
-      feather.replace();
-    }
 
     // Auto-refresh logs every 5 seconds to see real-time status updates
     setInterval(async () => {
@@ -1120,6 +1289,20 @@ async function bootstrap() {
     }, 5000);
   } catch (error) {
     console.error("Bootstrap error", error);
+  }
+}
+
+async function refreshActiveJobsCount() {
+  try {
+    const settings = await fetchJSON("/api/settings");
+    if (state.settings) {
+      state.settings.activeJobsCount = settings.activeJobsCount;
+    } else {
+      state.settings = settings;
+    }
+    updateDashboardMetrics();
+  } catch (error) {
+    console.warn('Failed to refresh active jobs count', error);
   }
 }
 
@@ -1142,4 +1325,3 @@ async function initializeApp() {
 }
 
 initializeApp();
-
