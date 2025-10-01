@@ -270,6 +270,10 @@ function formatStatus(channel) {
   };
 }
 
+function isMobileView() {
+  return window.innerWidth <= 767;
+}
+
 function renderChannels() {
   if (!elements.channelsTableBody) return;
   closeChannelDropdowns();
@@ -282,6 +286,15 @@ function renderChannels() {
 
   elements.channelsEmpty.classList.add("d-none");
 
+  // Check if mobile view
+  if (isMobileView()) {
+    renderMobileChannelCards();
+  } else {
+    renderDesktopChannelTable();
+  }
+}
+
+function renderDesktopChannelTable() {
   state.channels
     .slice()
     .sort((a, b) => a.channelName.localeCompare(b.channelName))
@@ -310,8 +323,8 @@ function renderChannels() {
         </td>
         <td class="text-end table-actions">
           <div class="dropdown">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
-                    data-bs-toggle="dropdown" 
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown"
                     data-bs-auto-close="true"
                     aria-expanded="false"
                     title="Actions">
@@ -347,6 +360,111 @@ function renderChannels() {
   // Initialize tooltips for action buttons
   initializeTooltips();
   setupChannelDropdowns();
+}
+
+function renderMobileChannelCards() {
+  // Get or create mobile cards container
+  const tableShell = document.querySelector('.md-table-shell');
+  let mobileContainer = tableShell.querySelector('.mobile-channel-cards');
+
+  if (!mobileContainer) {
+    mobileContainer = document.createElement('div');
+    mobileContainer.className = 'mobile-channel-cards';
+    tableShell.appendChild(mobileContainer);
+  }
+
+  mobileContainer.innerHTML = '';
+
+  state.channels
+    .slice()
+    .sort((a, b) => a.channelName.localeCompare(b.channelName))
+    .forEach((channel) => {
+      const status = formatStatus(channel);
+      const card = document.createElement('div');
+      card.className = 'mobile-channel-card';
+      card.innerHTML = `
+        <div class="mobile-channel-card-header">
+          <div class="mobile-channel-card-title">
+            <h3>${channel.channelName}</h3>
+            <div class="channel-id">${channel.youtubeChannelId}</div>
+          </div>
+          <span class="mobile-channel-card-status text-${status.color}">
+            <span class="dot"></span>${status.label}
+          </span>
+        </div>
+
+        <div class="mobile-channel-card-info">
+          <div class="mobile-channel-info-item">
+            <div class="mobile-channel-info-label">${i18n.t('messages.videos') || 'Vidéos'}</div>
+            <div class="mobile-channel-info-value">${channel.videoLimit || 5}</div>
+          </div>
+          <div class="mobile-channel-info-item">
+            <div class="mobile-channel-info-label">${i18n.t('messages.days') || 'Jours'}</div>
+            <div class="mobile-channel-info-value">${channel.daysBack || 7}</div>
+          </div>
+          <div class="mobile-channel-info-item">
+            <div class="mobile-channel-info-label">${i18n.t('channels.headers.schedule') || 'Planification'}</div>
+            <div class="mobile-channel-info-value"><code>${channel.cronExpression}</code></div>
+          </div>
+        </div>
+
+        <div class="mobile-channel-card-schedule">
+          <div class="mobile-channel-schedule-item">
+            <span class="mobile-channel-schedule-label">${i18n.t('channels.headers.lastExecution') || 'Dernière exéc.'}</span>
+            <span class="mobile-channel-schedule-value">${formatDateTime(channel.lastExecution)}</span>
+          </div>
+          <div class="mobile-channel-schedule-item">
+            <span class="mobile-channel-schedule-label">${i18n.t('channels.headers.nextExecution') || 'Prochaine exéc.'}</span>
+            <span class="mobile-channel-schedule-value">${formatDateTime(channel.nextExecution)}</span>
+          </div>
+        </div>
+
+        <div class="mobile-channel-card-actions">
+          <button class="btn btn-outline-primary" data-action="edit" data-id="${channel.id}">
+            <span class="material-icons-outlined">edit</span>
+            <span>Modifier</span>
+          </button>
+          <button class="btn btn-success" data-action="trigger" data-id="${channel.id}">
+            <span class="material-icons-outlined">play_arrow</span>
+            <span>Lancer</span>
+          </button>
+          <button class="btn btn-outline-danger" data-action="remove" data-id="${channel.id}" data-name="${channel.channelName}" title="${i18n.t('actions.remove') || 'Supprimer'}">
+            <span class="material-icons-outlined">delete</span>
+          </button>
+        </div>
+      `;
+
+      // Add event listeners to action buttons
+      const editBtn = card.querySelector('[data-action="edit"]');
+      const triggerBtn = card.querySelector('[data-action="trigger"]');
+      const removeBtn = card.querySelector('[data-action="remove"]');
+
+      editBtn.addEventListener('click', () => {
+        const foundChannel = state.channels.find((item) => item.id === channel.id);
+        if (foundChannel) {
+          fillChannelForm(foundChannel);
+          channelModal.show();
+        }
+      });
+
+      triggerBtn.addEventListener('click', async () => {
+        try {
+          await fetchJSON(`/api/channels/${channel.id}/trigger`, { method: "POST" });
+          showToast(i18n.t('messages.triggerRequested', {channelName: channel.channelName}) || `Déclenchement demandé pour ${channel.channelName}`, "success");
+          await loadLogs();
+        } catch (error) {
+          showToast(error.message, "danger");
+        }
+      });
+
+      removeBtn.addEventListener('click', () => {
+        elements.confirmRemoveMessage.textContent = i18n.t('messages.confirmRemoveChannel', {channelName: channel.channelName}) || `Supprimer « ${channel.channelName} » ?`;
+        elements.confirmRemoveButton.dataset.id = channel.id;
+        confirmRemoveModal.show();
+      });
+
+      mobileContainer.appendChild(card);
+    });
 }
 
 function initializeTooltips() {
@@ -1322,6 +1440,17 @@ async function initializeApp() {
   await i18n.init();
   registerEventListeners();
   await bootstrap();
+
+  // Add resize listener to switch between mobile and desktop views
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (state.session?.authenticated && state.channels.length > 0) {
+        renderChannels();
+      }
+    }, 250);
+  });
 }
 
 initializeApp();
