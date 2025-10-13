@@ -13,14 +13,17 @@ RUN npm run build
 # Stage 2: Create the production image
 FROM node:20-alpine AS runner
 WORKDIR /app
-ENV NODE_ENV=production
+# Commented out to allow HTTP cookies in development
+# ENV NODE_ENV=production  
 
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
-COPY data ./data
+
+# Create data directory (will be mounted as volume in docker-compose)
+RUN mkdir -p data
 
 EXPOSE 8080
 CMD ["node", "dist/server.js"]

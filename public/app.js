@@ -1139,24 +1139,43 @@ function fillChannelForm(channel) {
   elements.channelModalTitle.textContent = i18n.t('messages.modifyChannel', {channelName: channel.channelName}) || `Modifier · ${channel.channelName}`;
 }
 
+let isLoggingIn = false;
+
 function registerEventListeners() {
   elements.loginForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    // Prevent multiple submissions
+    if (isLoggingIn) {
+      console.log("Login already in progress, ignoring submission");
+      return;
+    }
+
+    isLoggingIn = true;
     const formData = new FormData(elements.loginForm);
     const payload = Object.fromEntries(formData.entries());
 
     try {
+      console.log("Logging in...");
       await fetchJSON("/api/login", {
         method: "POST",
         body: payload,
       });
+      console.log("Login successful, showing toast");
       showToast(i18n.t('messages.loginSuccessful') || "Connexion réussie", "success");
+      console.log("Loading session...");
       await loadSession();
+      console.log("Session loaded, authenticated:", state.session?.authenticated);
       if (state.session?.authenticated) {
+        console.log("Loading dashboard data...");
         await Promise.all([loadSettings(), loadChannels(), loadLogs()]);
+        console.log("Dashboard data loaded");
       }
     } catch (error) {
+      console.error("Login error:", error);
       showToast(error.message, "danger");
+    } finally {
+      isLoggingIn = false;
     }
   });
 
@@ -1397,7 +1416,7 @@ async function bootstrap() {
 
     // Auto-refresh logs every 5 seconds to see real-time status updates
     setInterval(async () => {
-      if (state.session.authenticated) {
+      if (state.session?.authenticated) {
         try {
           await loadLogs();
         } catch (error) {

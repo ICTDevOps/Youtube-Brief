@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  youtube-brief:
+    image: lordbadack/youtube-brief:latest
+    container_name: youtube-brief
+    restart: unless-stopped
+
+    ports:
+      # Port sur lequel l'application web sera accessible
+      # Format: HOST:CONTAINER
+      - "8080:8080"
+
+    volumes:
+      # Volume pour persister les données (channels, logs, settings)
+      # IMPORTANT: Ne pas supprimer ce volume pour conserver vos données
+      - youtube-brief-data:/app/data
+
+    environment:
+      # ==========================================
+      # Configuration du serveur
+      # ==========================================
+
+      # Port interne de l'application (normalement pas besoin de changer)
+      PORT: 8080
+
+      # ==========================================
+      # Configuration N8N - Webhooks
+      # ==========================================
+
+      # URL du webhook N8N pour déclencher le workflow de traitement des vidéos
+      # OBLIGATOIRE: Remplacer par votre URL de webhook N8N
+      N8N_WEBHOOK_URL: "https://your-n8n-instance.com/webhook/youtube-process"
+
+      # URL du webhook N8N pour recevoir les mises à jour de statut
+      # OPTIONNEL: Si vous avez un webhook séparé pour les statuts
+      N8N_STATUS_WEBHOOK_URL: "https://your-n8n-instance.com/webhook/youtube-status"
+
+      # Nombre de tentatives en cas d'échec du webhook
+      # Valeur par défaut: 3
+      N8N_RETRY_ATTEMPTS: 3
+
+      # Délai entre chaque tentative (en millisecondes)
+      # Valeur par défaut: 5000 (5 secondes)
+      N8N_RETRY_DELAY_MS: 5000
+
+      # Timeout pour les appels webhook (en millisecondes)
+      # Valeur par défaut: 60000 (60 secondes)
+      N8N_TIMEOUT_MS: 60000
+
+      # ==========================================
+      # Configuration de l'authentification
+      # ==========================================
+
+      # Nom d'utilisateur administrateur
+      # IMPORTANT: Changer pour votre propre username
+      ADMIN_USERNAME: "admin"
+
+      # Mot de passe administrateur
+      # IMPORTANT: Changer pour un mot de passe sécurisé
+      ADMIN_PASSWORD: "change-me-with-strong-password"
+
+      # Secret pour les sessions (doit être aléatoire et unique)
+      # IMPORTANT: Générer un secret aléatoire sécurisé
+      # Vous pouvez générer un secret avec: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+      SESSION_SECRET: "replace-with-random-secret-min-32-chars"
+
+      # ==========================================
+      # Configuration du Polling
+      # ==========================================
+
+      # Intervalle de polling pour vérifier les mises à jour (en millisecondes)
+      # Valeur par défaut: 5000 (5 secondes)
+      POLLING_INTERVAL_MS: 5000
+
+      # Timeout maximum pour le polling (en millisecondes)
+      # Valeur par défaut: 600000 (10 minutes)
+      POLLING_TIMEOUT_MS: 600000
+
+      # ==========================================
+      # Configuration des Tâches Planifiées (Cron)
+      # ==========================================
+
+      # Fuseau horaire pour l'évaluation des expressions cron
+      # Format: IANA timezone (ex: Europe/Paris, America/New_York, UTC)
+      # Valeur par défaut: Europe/Paris
+      CRON_TIMEZONE: "Europe/Paris"
+
+    # Limites de ressources (optionnel mais recommandé pour la production)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Health check pour vérifier que l'application fonctionne
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Labels pour Portainer (optionnel)
+    labels:
+      - "com.portainer.app=youtube-brief"
+      - "com.portainer.description=YouTube Brief Orchestrator with N8N integration"
+
+# Définition des volumes
+volumes:
+  youtube-brief-data:
+    driver: local
+    # Optionnel: Spécifier un chemin local pour le volume
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /path/to/your/data
+
+# Optionnel: Configuration réseau personnalisée
+# networks:
+#   youtube-brief-network:
+#     driver: bridge

@@ -100,9 +100,9 @@ body {
 .mesh-gradient {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(150px);
   opacity: 0.5;
-  animation: meshFloat 25s infinite ease-in-out;
+  animation: meshFloat 15s infinite ease-in-out;
   will-change: transform;
 }
 
